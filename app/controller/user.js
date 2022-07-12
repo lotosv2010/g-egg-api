@@ -3,6 +3,9 @@
 const Controller = require('egg').Controller;
 
 class UserController extends Controller {
+  /**
+   * 用户注册
+   */
   async create() {
     const { ctx, service: { user: userService } } = this;
     const { body } = ctx.request;
@@ -44,6 +47,9 @@ class UserController extends Controller {
       },
     };
   }
+  /**
+   * 用户登录
+   */
   async login() {
     const { ctx, service: { user: userService } } = this;
     const { body } = ctx.request;
@@ -74,6 +80,25 @@ class UserController extends Controller {
     });
     // ! 4.发送响应
 
+    ctx.body = {
+      user: {
+        email: user.email,
+        username: user.username,
+        token,
+        avatar: user.avatar,
+        channelDescription: user.channelDescription,
+      },
+    };
+  }
+  /**
+   * 获取当前登录用户
+   */
+  async getCurrentUser() {
+    const { ctx } = this;
+    const { user = {}, token = '' } = ctx;
+    // ! 1.验证 token
+    // ! 2.获取用户信息
+    // ! 3.发送信息
     ctx.body = {
       user: {
         email: user.email,
