@@ -15,6 +15,7 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1657548294141_5964';
 
+  // mongoose 配置
   config.mongoose = {
     client: {
       url: 'mongodb://127.0.0.1/youtube',
@@ -26,12 +27,22 @@ module.exports = appInfo => {
     },
   };
 
+  // web安全配置
+  config.security = {
+    csrf: {
+      enable: false,
+    },
+  };
+
   // add your middleware config here
-  config.middleware = [];
+  config.middleware = [ 'errorHandler' ];
 
   // add your user config here
   const userConfig = {
-    // myAppName: 'egg',
+    jwt: {
+      secret: '7f26b6c7-0c6b-43a5-a473-bfdbfd71a053',
+      expiresIn: '7d',
+    },
   };
 
   return {
