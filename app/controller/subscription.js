@@ -12,9 +12,7 @@ class SubscriptionController extends Controller {
   async getSubscriptions() {
     const { ctx, service: { subscription: subscriptionService } } = this;
     const { userId } = ctx.params;
-    let subscriptions = await subscriptionService.Subscription.find({
-      user: userId,
-    }).populate('channel');
+    let subscriptions = await subscriptionService.findByUserId(userId);
     subscriptions = subscriptions.map(s => this.pick([ '_id', 'username', 'avatar' ])(s?.channel));
     ctx.body = {
       subscriptions,

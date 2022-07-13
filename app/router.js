@@ -24,4 +24,7 @@ module.exports = app => {
   router.get('/vod/CreateUploadVideo', auth, controller.vod.createUploadVideo); // 获取视频上传地址和凭证
   router.get('/vod/RefreshUploadVideo', auth, controller.vod.refreshUploadVideo); // 刷新视频上传凭证
   router.get('/vod/GetVideoPlayAuth', controller.vod.getVideoPlayAuth); // 获取视频播放凭证
+
+  // ! 视频相关
+  router.post('/videos', auth, controller.video.createVideo); // 创建视频
 };

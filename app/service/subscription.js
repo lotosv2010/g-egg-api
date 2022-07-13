@@ -5,12 +5,14 @@ class SubscriptionService extends Service {
     return this.app.model.Subscription;
   }
   /**
-   * 根据 ID 获取订阅频道
-   * @param {string} id 用户id
+   * 根据 userId 获取订阅频道
+   * @param {string} userId 用户id
    * @return {Array} 订阅频道列表
    */
-  async findById(id) {
-    return await this.Subscription.findById(id);
+  async findByUserId(userId) {
+    return await this.Subscription.find({
+      user: userId,
+    }).populate('channel');
   }
 }
 
