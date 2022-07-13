@@ -16,6 +16,9 @@ class UserService extends Service {
   get verify() {
     return this.ctx.helper.verify;
   }
+  get Subscription() {
+    return this.app.model.Subscription;
+  }
   /**
    * 根据用户名查询
    * @param {string} username 用户名
@@ -81,6 +84,31 @@ class UserService extends Service {
   async getToken(token) {
     const { secret } = this.jwt;
     return await this.verify(token, secret);
+  }
+  /**
+   * 订阅频道
+   * @param {ObjectId} userId 用户ID
+   * @param {ObjectId} channelId 频道ID
+   */
+  async subscribe(userId, channelId) {
+    // 1.检查是否已经订阅
+    const record = await this.Subscription.findOne({
+      user: userId,
+      channel: channelId,
+    });
+    const user = await this.User.findById(channelId);
+    // 2.没有订阅，添加订阅
+    if (!record && user) {
+      await this.Subscription.create({
+        user: userId,
+        channel: channelId,
+      });
+      // 更新用户数量
+      user.subscribersCount++;
+      await user.save();
+    }
+    // 3.返回用户信息
+    return user;
   }
 }
 

@@ -13,6 +13,7 @@ specifiers:
   eslint: ^8
   eslint-config-egg: ^12
   jsonwebtoken: ^8.5.1
+  lodash: ^4.17.21
 
 dependencies:
   egg: 2.36.0
@@ -20,6 +21,7 @@ dependencies:
   egg-scripts: 2.17.0
   egg-validate: 2.0.2
   jsonwebtoken: 8.5.1
+  lodash: 4.17.21
 
 devDependencies:
   autod: 3.1.2
@@ -5421,7 +5423,6 @@ packages:
 
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-    dev: true
 
   /log-symbols/2.2.0:
     resolution: {integrity: sha512-VeIAFslyIerEJLXHziedo2basKbMKtTw3vfn5IzG0XTjhAVEJyNHnL2p7vc+wBDSdQuUpNw3M2u6xb9QsAY5Eg==}

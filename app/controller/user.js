@@ -3,6 +3,9 @@
 const Controller = require('egg').Controller;
 
 class UserController extends Controller {
+  get pick() {
+    return this.ctx.helper.pick;
+  }
   /**
    * 用户注册
    */
@@ -39,11 +42,13 @@ class UserController extends Controller {
 
     ctx.body = {
       user: {
-        email: user.email,
-        username: user.username,
         token,
-        avatar: user.avatar,
-        channelDescription: user.channelDescription,
+        ...this.pick([
+          'username',
+          'email',
+          'avatar',
+          'channelDescription',
+        ])(user),
       },
     };
   }
@@ -82,11 +87,13 @@ class UserController extends Controller {
 
     ctx.body = {
       user: {
-        email: user.email,
-        username: user.username,
         token,
-        avatar: user.avatar,
-        channelDescription: user.channelDescription,
+        ...this.pick([
+          'username',
+          'email',
+          'avatar',
+          'channelDescription',
+        ])(user),
       },
     };
   }
@@ -101,11 +108,13 @@ class UserController extends Controller {
     // ! 3.发送信息
     ctx.body = {
       user: {
-        email: user.email,
-        username: user.username,
         token,
-        avatar: user.avatar,
-        channelDescription: user.channelDescription,
+        ...this.pick([
+          'username',
+          'email',
+          'avatar',
+          'channelDescription',
+        ])(user),
       },
     };
   }
@@ -143,14 +152,47 @@ class UserController extends Controller {
     const userData = await userService.updateUser(body);
     // 5.返回更新之后的用户信息
     ctx.body = {
+      user: this.pick([
+        'username',
+        'email',
+        'avatar',
+        'password',
+        'channelDescription',
+      ])(userData),
+    };
+  }
+  /**
+   * 订阅频道
+   */
+  async subscribe() {
+    const { ctx, service: { user: userService } } = this;
+    const { userId: channelId } = ctx.params;
+    const { user = {} } = ctx;
+    const { _id: userId } = user;
+    // ! 1.用户不能订阅自己
+    if (userId === channelId) {
+      ctx.throw(422, '用户不能订阅自己');
+    }
+    // ! 2.添加订阅
+    const userData = await userService.subscribe(userId, channelId);
+    if (!userData) {
+      ctx.throw(404, '订阅频道不存在');
+    }
+    // ! 3.发送信息
+    ctx.body = {
       user: {
-        email: userData.email,
-        username: userData.username,
-        password: userData.password,
-        avatar: userData.avatar,
-        channelDescription: userData.channelDescription,
+        ...this.pick([
+          'username',
+          'email',
+          'avatar',
+          'cover',
+          'channelDescription',
+          'subscribersCount',
+        ])(userData),
+        isSubscribed: true,
       },
     };
+    // ctx.body = pick()();
   }
 }
 
