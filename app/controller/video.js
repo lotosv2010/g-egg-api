@@ -134,6 +134,41 @@ class VideoController extends Controller {
       videosCount,
     };
   }
+  /**
+   * 更新视频
+   */
+  async updaeVideo() {
+    const { ctx, service: { video: videoService } } = this;
+    const { request: { body }, user, params: { videoId } } = ctx;
+
+    // ! 1.数据校验
+    ctx.validate({
+      title: { type: 'string', required: false },
+      description: { type: 'string', required: false },
+      vodVideoId: { type: 'string', required: false },
+      cover: { type: 'string', required: false },
+    }, body);
+
+    // ! 2.查询视频
+    const video = await videoService.findById(videoId);
+
+    if (!video) {
+      ctx.throw(404, '视频不存在');
+    }
+
+    if (user.id !== video.user.id) {
+      ctx.throw(403);
+    }
+
+    // ! 3.更新视频
+    Object.assign(video, this.pick([ 'title', 'description', 'vodVideoId', 'cover' ])(body));
+    await video.save();
+
+    // ! 4.返回信息
+    ctx.body = {
+      video,
+    };
+  }
 }
 
 module.exports = VideoController;
