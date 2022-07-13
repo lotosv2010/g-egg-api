@@ -18,4 +18,5 @@ module.exports = app => {
   // ! 用户订阅相关
   router.post('/users/:userId/subscribe', auth, controller.user.subscribe); // 订阅频道
   router.delete('/users/:userId/subscribe', auth, controller.user.unsubscribe); // 订阅频道
+  router.get('/users/:userId/subscriptions', controller.subscription.getSubscriptions); // 获取用户订阅的频道列表
 };
