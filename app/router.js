@@ -28,4 +28,5 @@ module.exports = app => {
   // ! 视频相关
   router.post('/videos', auth, controller.video.createVideo); // 创建视频
   router.get('/videos/:id', app.middleware.auth({ required: false }), controller.video.getVideo); // 获取视频详情
+  router.get('/videos', controller.video.getVideos); // 获取视频列表
 };

@@ -23,6 +23,24 @@ class VideoService extends Service {
       .populate('user', '_id username avatar subscribersCount')
       .select('-updatedAt -__v');
   }
+  /**
+   * 获取视频总数
+   * @return {number} 视频总数
+   */
+  async getTotalCount() {
+    return await this.Video.countDocuments();
+  }
+  async getVideos(options) {
+    const { pageNum, pageSize } = options;
+    return await this.Video
+      .find()
+      .populate('user', '_id username avatar subscribersCount')
+      .sort({
+        createdAt: -1,
+      })
+      .skip((+pageNum - 1) * +pageSize)
+      .limit(+pageSize);
+  }
 }
 
 module.exports = VideoService;
