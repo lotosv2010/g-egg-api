@@ -33,6 +33,42 @@ class VideoController extends Controller {
       video,
     };
   }
+  /**
+   * 获取视频信息
+   */
+  async getVideo() {
+    const { ctx, service: { video: videoService, like: likeService, subscription: subscriptionService } } = this;
+    const { params: { id }, user } = ctx;
+
+    // ! 1.获取视频信息
+    let video = await videoService.findById(id);
+    if (!video) {
+      ctx.throw(404, '视频不存在');
+    }
+
+    video = video?.toJSON();
+    video.isLiked = false; // 是否喜欢
+    video.isDisliked = false; // 是否不喜欢
+    video.user.isSubscribed = false; // 是否已订阅作者
+
+    // ! 2.获取 喜欢/不喜欢/订阅
+    if (user) {
+      const { _id: userId } = user;
+      if (await likeService.findOne({ user: userId, video: id, like: 1 })) {
+        video.isLiked = true;
+      }
+      if (await likeService.findOne({ user: userId, video: id, like: -1 })) {
+        video.isDisliked = true;
+      }
+      if (await subscriptionService.findOne({ user: userId, channel: video?.user?._id })) {
+        video.user.isSubscribed = true;
+      }
+    }
+    // ! 3.返回信息
+    ctx.body = {
+      video,
+    };
+  }
 }
 
 module.exports = VideoController;

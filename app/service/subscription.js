@@ -14,6 +14,9 @@ class SubscriptionService extends Service {
       user: userId,
     }).populate('channel');
   }
+  async findOne(data) {
+    return this.Subscription.findOne(data);
+  }
 }
 
 module.exports = SubscriptionService;
