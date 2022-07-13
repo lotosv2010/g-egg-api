@@ -107,6 +107,33 @@ class VideoController extends Controller {
       videosCount,
     };
   }
+  /**
+   * 获取用户关注的视频列表
+   */
+  async getUserFeedVideos() {
+    const { ctx, service: { video: videoService, subscription: subscriptionService } } = this;
+    const { query: { pageNum = 1, pageSize = 10 }, user } = ctx;
+    const { _id: userId } = user ?? {};
+
+    // ! 1.获取用户关注的频道列表
+    const channels = await subscriptionService.find({ user: userId });
+    const channelIds = channels.map(c => c?.channel?._id);
+
+    // ! 2.获取总条数
+    const [ videos, videosCount ] = await Promise.all([
+      videoService.getVideos({ pageNum, pageSize }, { user: {
+        $in: channelIds,
+      } }),
+      videoService.getTotalCount({ user: {
+        $in: channelIds,
+      } }),
+    ]);
+    // ! 3.返回响应信息
+    ctx.body = {
+      videos,
+      videosCount,
+    };
+  }
 }
 
 module.exports = VideoController;

@@ -30,4 +30,5 @@ module.exports = app => {
   router.get('/videos/:id', app.middleware.auth({ required: false }), controller.video.getVideo); // 获取视频详情
   router.get('/videos', controller.video.getVideos); // 获取视频列表
   router.get('/users/:userId/videos', controller.video.getUserVideos); // 获取用户发布的视频列表
+  router.get('/users/videos/feed', auth, controller.video.getUserFeedVideos); // 获取用户关注的视频列表
 };

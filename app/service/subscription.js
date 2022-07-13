@@ -15,7 +15,10 @@ class SubscriptionService extends Service {
     }).populate('channel');
   }
   async findOne(data) {
-    return this.Subscription.findOne(data);
+    return await this.Subscription.findOne(data);
+  }
+  async find(params) {
+    return await this.Subscription.find(params).populate('channel');
   }
 }
 
