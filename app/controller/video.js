@@ -169,6 +169,30 @@ class VideoController extends Controller {
       video,
     };
   }
+  /**
+   * 删除视频
+   */
+  async deleteVideo() {
+    const { ctx, service: { video: videoService } } = this;
+    const { user, params: { videoId } } = ctx;
+
+    // ! 1.查询视频
+    const video = await videoService.findById(videoId);
+
+    if (!video) {
+      ctx.throw(404, '视频不存在');
+    }
+
+    if (user.id !== video.user.id) {
+      ctx.throw(403);
+    }
+
+    // ! 2.更新视频
+    await video.remove();
+
+    // ! 3.返回信息
+    ctx.status = 204;
+  }
 }
 
 module.exports = VideoController;
