@@ -162,6 +162,40 @@ class UserController extends Controller {
     };
   }
   /**
+   * 获取用户资料
+   */
+  async getUser() {
+    const { ctx, service: { user: userService } } = this;
+    const { userId: channelId } = ctx.params;
+    const { user = {} } = ctx;
+    const { _id: userId } = user;
+    // 1.获取订阅的状态
+    let isSubscribed = false;
+    if (user) {
+      // 获取订阅记录
+      const record = await userService.getSubscribe(userId, channelId);
+      if (record) {
+        isSubscribed = true;
+      }
+    }
+    // 2.获取用户信息
+    const userData = await userService.findById(channelId);
+    // 3.发送响应
+    ctx.body = {
+      user: {
+        ...this.pick([
+          'username',
+          'email',
+          'avatar',
+          'cover',
+          'channelDescription',
+          'subscribersCount',
+        ])(userData),
+        isSubscribed,
+      },
+    };
+  }
+  /**
    * 订阅频道
    */
   async subscribe() {

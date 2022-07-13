@@ -135,6 +135,17 @@ class UserService extends Service {
     // 3.返回用户信息
     return user;
   }
+  /**
+   * 获取订阅记录
+   * @param {ObjectId} userId 用户ID
+   * @param {ObjectId} channelId 频道ID
+   */
+  async getSubscribe(userId, channelId) {
+    return await this.Subscription.findOne({
+      user: userId,
+      channel: channelId,
+    });
+  }
 }
 
 module.exports = UserService;
