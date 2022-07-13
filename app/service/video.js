@@ -25,15 +25,16 @@ class VideoService extends Service {
   }
   /**
    * 获取视频总数
+   * @param {string} params 查询条件
    * @return {number} 视频总数
    */
-  async getTotalCount() {
-    return await this.Video.countDocuments();
+  async getTotalCount(params = {}) {
+    return await this.Video.countDocuments(params);
   }
-  async getVideos(options) {
+  async getVideos(options, params = {}) {
     const { pageNum, pageSize } = options;
     return await this.Video
-      .find()
+      .find(params)
       .populate('user', '_id username avatar subscribersCount')
       .sort({
         createdAt: -1,

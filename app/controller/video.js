@@ -88,6 +88,25 @@ class VideoController extends Controller {
       videosCount,
     };
   }
+  /**
+   * 获取用户发布的视频列表
+   */
+  async getUserVideos() {
+    const { ctx, service: { video: videoService } } = this;
+    const { query: { pageNum = 1, pageSize = 10 }, params: { userId } } = ctx;
+
+    // ! 1.获取列表
+    // ! 2.获取总条数
+    const [ videos, videosCount ] = await Promise.all([
+      videoService.getVideos({ pageNum, pageSize }, { user: userId }),
+      videoService.getTotalCount({ user: userId }),
+    ]);
+    // ! 3.返回响应信息
+    ctx.body = {
+      videos,
+      videosCount,
+    };
+  }
 }
 
 module.exports = VideoController;
