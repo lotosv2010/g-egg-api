@@ -19,4 +19,9 @@ module.exports = app => {
   router.post('/users/:userId/subscribe', auth, controller.user.subscribe); // 订阅频道
   router.delete('/users/:userId/subscribe', auth, controller.user.unsubscribe); // 订阅频道
   router.get('/users/:userId/subscriptions', controller.subscription.getSubscriptions); // 获取用户订阅的频道列表
+
+  // ! VOD
+  router.get('/vod/CreateUploadVideo', auth, controller.vod.createUploadVideo); // 获取视频上传地址和凭证
+  router.get('/vod/RefreshUploadVideo', auth, controller.vod.refreshUploadVideo); // 刷新视频上传凭证
+  router.get('/vod/GetVideoPlayAuth', controller.vod.getVideoPlayAuth); // 获取视频播放凭证
 };
