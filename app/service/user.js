@@ -110,6 +110,31 @@ class UserService extends Service {
     // 3.返回用户信息
     return user;
   }
+  /**
+   * 取消订阅频道
+   * @param {ObjectId} userId 用户ID
+   * @param {ObjectId} channelId 频道ID
+   */
+  async unsubscribe(userId, channelId) {
+    // 1.检查是否已经订阅
+    const record = await this.Subscription.findOne({
+      user: userId,
+      channel: channelId,
+    });
+    const user = await this.User.findById(channelId);
+    // 2.已订阅，取消订阅
+    if (record && user) {
+      await this.Subscription.findOneAndDelete({
+        user: userId,
+        channel: channelId,
+      });
+      // 更新用户数量
+      user.subscribersCount--;
+      await user.save();
+    }
+    // 3.返回用户信息
+    return user;
+  }
 }
 
 module.exports = UserService;

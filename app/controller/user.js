@@ -192,7 +192,38 @@ class UserController extends Controller {
         isSubscribed: true,
       },
     };
-    // ctx.body = pick()();
+  }
+  /**
+   * 取消订阅频道
+   */
+  async unsubscribe() {
+    const { ctx, service: { user: userService } } = this;
+    const { userId: channelId } = ctx.params;
+    const { user = {} } = ctx;
+    const { _id: userId } = user;
+    // ! 1.用户不能订阅自己
+    if (userId === channelId) {
+      ctx.throw(422, '用户不能取消订阅自己');
+    }
+    // ! 2.取消订阅
+    const userData = await userService.unsubscribe(userId, channelId);
+    if (!userData) {
+      ctx.throw(404, '取消订阅频道不存在');
+    }
+    // ! 3.发送信息
+    ctx.body = {
+      user: {
+        ...this.pick([
+          'username',
+          'email',
+          'avatar',
+          'cover',
+          'channelDescription',
+          'subscribersCount',
+        ])(userData),
+        isSubscribed: false,
+      },
+    };
   }
 }
 
