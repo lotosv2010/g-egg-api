@@ -18,8 +18,8 @@ module.exports = () => { // 外层函数负责接收参数
       await next();
     } catch (err) {
       // ctx.app.emit('error', err, ctx);
-      // 捕获到错误 --> 401 状态码
-      ctx.throw(401);
+      // 捕获到错误
+      ctx.throw(err);
     }
   };
 };

@@ -54,6 +54,17 @@ class UserService extends Service {
     return await this.User.create(user);
   }
   /**
+   * 跟新用户
+   * @param {*} user 用户
+   * @return {User} 用户
+   */
+  async updateUser(user) {
+    const { _id: id } = this.ctx?.user ?? {};
+    return await this.User.findByIdAndUpdate(id, user, {
+      new: true,
+    }).select('+password');
+  }
+  /**
    * 生成 Token
    * @param {string} data 用户id
    * @return {string} token

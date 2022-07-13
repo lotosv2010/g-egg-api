@@ -109,6 +109,49 @@ class UserController extends Controller {
       },
     };
   }
+  /**
+   * 更新用户信息
+   */
+  async update() {
+    const { ctx, service: { user: userService } } = this;
+    const { body } = ctx.request;
+    let { email, username, password } = body;
+    const { user = {} } = ctx;
+    const { md5 } = ctx.helper;
+    // ! 1.基本数据验证
+    ctx.validate({
+      username: { type: 'string', required: false },
+      email: { type: 'email', required: false },
+      password: { type: 'string', required: false },
+      channelDescription: { type: 'string', required: false },
+      avatar: { type: 'string', required: false },
+    }, body);
+    // ! 2.校验用户是否已存在
+    if (username && username !== user?.username && await userService.findByUsername(username)) {
+      ctx.throw(422, 'username 已存在');
+    }
+
+    // ! 3.校验邮箱是否已存在
+    if (email && email !== user?.email && await userService.findByEmail(email)) {
+      ctx.throw(422, 'email 已存在');
+    }
+
+    if (password) {
+      password = md5(password);
+    }
+    // 4.更新用户信息
+    const userData = await userService.updateUser(body);
+    // 5.返回更新之后的用户信息
+    ctx.body = {
+      user: {
+        email: userData.email,
+        username: userData.username,
+        password: userData.password,
+        avatar: userData.avatar,
+        channelDescription: userData.channelDescription,
+      },
+    };
+  }
 }
 
 module.exports = UserController;

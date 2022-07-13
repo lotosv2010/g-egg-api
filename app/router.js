@@ -12,4 +12,5 @@ module.exports = app => {
   router.post('/users', controller.user.create); // 用户注册
   router.post('/users/login', controller.user.login); // 用户登录
   router.get('/user', auth, controller.user.getCurrentUser); // 获取当前登录用户
+  router.put('/user', auth, controller.user.update); // 更新当前登录用户
 };
