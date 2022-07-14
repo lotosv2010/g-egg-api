@@ -24,7 +24,7 @@ class VideoController extends Controller {
       ctx.throw(404, '视频不存在');
     }
 
-    // ! 3.创建视频
+    // ! 3.创建评论
     const commnet = await commentService.create({
       ...body,
       user: user._id,
@@ -69,6 +69,42 @@ class VideoController extends Controller {
       comments,
       commentsCount,
     };
+  }
+  /**
+   * 删除视频评论
+   */
+  async deleteVideoComment() {
+    const { ctx, service: { comment: commentService, video: videoService } } = this;
+    const { params: { videoId, commentId }, user } = ctx;
+    // ! 1.查询评论
+    const comment = await commentService.findById(commentId);
+
+    if (!comment) {
+      ctx.throw(404, '评论不存在');
+    }
+
+    // ! 2.校验是否有权限
+    if (!comment.user.equals(user.id)) {
+      ctx.throw(403);
+    }
+
+    // ! 3.获取视频
+    const video = await videoService.findById(videoId);
+    if (!video) {
+      ctx.throw(404, '视频不存在');
+    }
+
+    // ! 4.删除评论
+    await comment.remove();
+
+    // ! 5.更新视频评论数
+    video.commentsCount = await commentService.getCount({
+      video: videoId,
+    });
+    await video.save();
+
+    // ! 6.返回信息
+    ctx.status = 204;
   }
 }
 

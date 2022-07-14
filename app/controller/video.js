@@ -187,7 +187,7 @@ class VideoController extends Controller {
       ctx.throw(403);
     }
 
-    // ! 2.更新视频
+    // ! 2.删除视频
     await video.remove();
 
     // ! 3.返回信息

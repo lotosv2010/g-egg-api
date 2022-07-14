@@ -7,7 +7,7 @@ class CommentService extends Service {
   /**
    * 创建评论
    * @param {string} comment 评论信息
-   * @return {Video} 评论信息
+   * @return {Comment} 评论信息
    */
   async create(comment) {
     return await this.Comment.create(comment);
@@ -36,6 +36,22 @@ class CommentService extends Service {
       })
       .populate('user')
       .populate('video');
+  }
+  /**
+   * 获取评论
+   * @param {object} params 查询条件
+   * @return {Comment} 评论信息
+   */
+  async find(params) {
+    return await this.Comment.find(params);
+  }
+  /**
+   * 根据 ID 获取评论
+   * @param {string} id ID
+   * @return {Comment} 评论信息
+   */
+  async findById(id) {
+    return await this.Comment.findById(id);
   }
 }
 
