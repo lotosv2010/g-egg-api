@@ -38,4 +38,7 @@ module.exports = app => {
   router.post('/videos/:videoId/comments', auth, controller.comment.createVideoComment); // 添加视频评论
   router.get('/videos/:videoId/comments', controller.comment.getVideoComments); // 获取视频评论列表
   router.delete('/videos/:videoId/comments/:commentId', auth, controller.comment.deleteVideoComment); // 删除视频评论
+
+  // !点赞相关
+  router.post('/videos/:videoId/like', auth, controller.like.createVideoLike); // 视频点赞
 };
