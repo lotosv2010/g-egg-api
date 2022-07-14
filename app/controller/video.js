@@ -193,6 +193,32 @@ class VideoController extends Controller {
     // ! 3.返回信息
     ctx.status = 204;
   }
+  /**
+   * 获取用户喜欢的视频列表
+   */
+  async getUserLikedVideos() {
+    const { ctx, service: { video: videoService, like: likeService } } = this;
+    const { query: { pageNum = 1, pageSize = 10 }, user } = ctx;
+    const { _id: userId } = user ?? {};
+
+    // ! 1.获取用户喜欢的视频列表
+    const filter = { user: userId, like: 1 };
+    const likes = await likeService.getLike({ pageNum, pageSize }, filter);
+    const likeIds = likes.map(c => c?.video);
+
+    // ! 2.获取总条数
+    const [ videos, videosCount ] = await Promise.all([
+      videoService.find({ _id: {
+        $in: likeIds,
+      } }),
+      likeService.getCount(filter),
+    ]);
+    // ! 3.返回响应信息
+    ctx.body = {
+      videos,
+      videosCount,
+    };
+  }
 }
 
 module.exports = VideoController;

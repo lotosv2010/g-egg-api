@@ -31,6 +31,12 @@ class VideoService extends Service {
   async getTotalCount(params = {}) {
     return await this.Video.countDocuments(params);
   }
+  /**
+   * 分页获取视频列表
+   * @param {object} options 分页参数
+   * @param {object} params 查询参数
+   * @return {Array} 视频列表
+   */
   async getVideos(options, params = {}) {
     const { pageNum, pageSize } = options;
     return await this.Video
@@ -41,6 +47,16 @@ class VideoService extends Service {
       })
       .skip((+pageNum - 1) * +pageSize)
       .limit(+pageSize);
+  }
+  /**
+   * 获取视频列表
+   * @param {object} params 查询参数
+   * @return {Array} 视频列表
+   */
+  async find(params = {}) {
+    return await this.Video
+      .find(params)
+      .populate('user', '_id username avatar subscribersCount');
   }
 }
 

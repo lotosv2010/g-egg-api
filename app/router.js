@@ -33,6 +33,7 @@ module.exports = app => {
   router.get('/users/videos/feed', auth, controller.video.getUserFeedVideos); // 获取用户关注的视频列表
   router.put('/videos/:videoId', auth, controller.video.updaeVideo); // 更新视频
   router.delete('/videos/:videoId', auth, controller.video.deleteVideo); // 删除视频
+  router.get('/users/videos/liked', auth, controller.video.getUserLikedVideos); // 获取用户喜欢的视频列表
 
   // ! 评论相关
   router.post('/videos/:videoId/comments', auth, controller.comment.createVideoComment); // 添加视频评论
