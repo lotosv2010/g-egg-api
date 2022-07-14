@@ -40,5 +40,6 @@ module.exports = app => {
   router.delete('/videos/:videoId/comments/:commentId', auth, controller.comment.deleteVideoComment); // 删除视频评论
 
   // !点赞相关
-  router.post('/videos/:videoId/like', auth, controller.like.createVideoLike); // 视频点赞
+  router.post('/videos/:videoId/like', auth, controller.like.likeVideo); // 视频点赞
+  router.post('/videos/:videoId/dislike', auth, controller.like.dislikeVideo); // 视频取消点赞
 };
