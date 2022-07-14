@@ -17,8 +17,25 @@ class CommentService extends Service {
    * @param {string} params 入参
    * @return {number} 评论数
    */
-  async getCountById(params) {
+  async getCount(params) {
     return await this.Comment.countDocuments(params);
+  }
+  /**
+   * 获取评论列表
+   * @param {object} options 请求参数
+   * @param {object} params 查询条件
+   */
+  async getComments(options, params) {
+    const { pageNum, pageSize } = options;
+    return await this.Comment
+      .find(params)
+      .skip((+pageNum - 1) * +pageSize)
+      .limit(+pageSize)
+      .sort({
+        createdAt: -1,
+      })
+      .populate('user')
+      .populate('video');
   }
 }
 

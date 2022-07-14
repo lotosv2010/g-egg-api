@@ -32,7 +32,7 @@ class VideoController extends Controller {
     });
 
     // ! 4.更新视频评论数
-    video.commentsCount = await commentService.getCountById({
+    video.commentsCount = await commentService.getCount({
       video: videoId,
     });
     await video.save();
@@ -44,6 +44,30 @@ class VideoController extends Controller {
     ctx.status = 201;
     ctx.body = {
       commnet,
+    };
+  }
+  /**
+   * 获取视频评论列表
+   */
+  async getVideoComments() {
+    const { ctx, service: { comment: commentService } } = this;
+    const { params: { videoId }, query } = ctx;
+
+    // ! 1.获取评论列表
+    // ! 2.获取评论数
+    const options = query ?? { pageNum: 1, pageSize: 10 };
+    const params = {
+      video: videoId,
+    };
+    const [ comments, commentsCount ] = await Promise.all([
+      commentService.getComments(options, params),
+      commentService.getCount(params),
+    ]);
+
+    // ! 3.返回信息
+    ctx.body = {
+      comments,
+      commentsCount,
     };
   }
 }
